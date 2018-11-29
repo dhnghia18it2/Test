@@ -1,0 +1,143 @@
+package test;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JRadioButton;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class student extends JFrame {
+	//tạo đối tượng connect
+	Connection conn;
+	Statement stmt;
+	public void ConnectDB()
+	{
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/sinhvien","root", "");
+			System.out.println("Connect Success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+	private JPanel contentPane;
+	private JTextField textField;
+	private JTextField textField_1;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					student frame = new student();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public student() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblEmail = new JLabel("Email");
+		lblEmail.setBounds(22, 25, 64, 20);
+		contentPane.add(lblEmail);
+		
+		textField = new JTextField();
+		textField.setBounds(118, 25, 233, 20);
+		contentPane.add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setBounds(22, 80, 64, 20);
+		contentPane.add(lblPassword);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(118, 80, 233, 20);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JLabel lblGender = new JLabel("Gender");
+		lblGender.setBounds(22, 130, 64, 20);
+		contentPane.add(lblGender);
+		
+		JRadioButton rdbtnMale = new JRadioButton("Male");
+		rdbtnMale.setBounds(118, 129, 70, 21);
+		contentPane.add(rdbtnMale);
+		
+		JRadioButton rdbtnFemale = new JRadioButton("Female");
+		rdbtnFemale.setBounds(198, 129, 64, 21);
+		contentPane.add(rdbtnFemale);
+		
+		JButton btnRegis = new JButton("Regis");
+		btnRegis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String gt="";
+					if(rdbtnMale.isSelected()) gt=rdbtnMale.getText();
+					if(rdbtnFemale.isSelected()) gt=rdbtnFemale.getText();
+					ConnectDB();
+					stmt = conn.createStatement();
+					int n= stmt.executeUpdate("Insert into account values('"+textField.getText()+"','"+textField_1.getText()+"','"+gt+"')");
+					if(n>0) JOptionPane.showConfirmDialog(null, "Success");
+					else JOptionPane.showConfirmDialog(null, "Fail");
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		btnRegis.setBounds(58, 176, 89, 23);
+		contentPane.add(btnRegis);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String gt="";
+					if(rdbtnMale.isSelected()) gt=rdbtnMale.getText();
+					if(rdbtnFemale.isSelected()) gt=rdbtnFemale.getText();
+					ConnectDB();
+					stmt = conn.createStatement();
+					int n= stmt.executeUpdate("Update account set Password='"+textField.getText()+"',where Username='"+textField_1.getText()+"','"+gt+"')");
+					if(n>0) JOptionPane.showConfirmDialog(null, "Success");
+					else JOptionPane.showConfirmDialog(null, "Fail");
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		btnUpdate.setBounds(173, 176, 89, 23);
+		contentPane.add(btnUpdate);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(292, 176, 89, 23);
+		contentPane.add(btnDelete);
+	}
+}
