@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -36,6 +37,7 @@ public class student extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_1;
+	private ButtonGroup br;
 
 	/**
 	 * Launch the application.
@@ -93,6 +95,9 @@ public class student extends JFrame {
 		JRadioButton rdbtnFemale = new JRadioButton("Female");
 		rdbtnFemale.setBounds(198, 129, 64, 21);
 		contentPane.add(rdbtnFemale);
+		br = new ButtonGroup();
+		br.add(rdbtnMale);
+		br.add(rdbtnFemale);
 		
 		JButton btnRegis = new JButton("Regis");
 		btnRegis.addActionListener(new ActionListener() {
@@ -108,9 +113,9 @@ public class student extends JFrame {
 					else JOptionPane.showConfirmDialog(null, "Fail");
 					conn.close();
 					stmt.close();
-				} catch (Exception e2) {
+				} catch (Exception e1) {
 					// TODO: handle exception
-					e2.printStackTrace();
+					e1.printStackTrace();
 				}
 			}
 		});
