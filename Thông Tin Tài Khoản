@@ -1,0 +1,139 @@
+package bankdb;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.Statement;
+import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+
+public class Thongtintk extends JFrame {
+	Connection conn;
+	Statement stmt;
+	ResultSet rs;
+	ResultSetMetaData rsm;
+	public void ConnectDB()
+	{
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/bankdb","root", "");
+			System.out.println("Connect Success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+
+
+	private JPanel contentPane;
+	private JTextField tfTuKhoa;
+	// chuyển các thông tin vào table
+	Object[] colHeader = {"Id","Name","Balance","Address"};
+	DefaultTableModel model = new DefaultTableModel(colHeader, 0);
+	private JTable tbtk;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Thongtintk frame = new Thongtintk();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Thongtintk() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 517, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNhpTKha = new JLabel("Nh\u1EADp T\u1EEB Kh\u00F3a");
+		lblNhpTKha.setBounds(22, 11, 107, 36);
+		contentPane.add(lblNhpTKha);
+		
+		tfTuKhoa = new JTextField();
+		tfTuKhoa.setBounds(137, 11, 171, 36);
+		contentPane.add(tfTuKhoa);
+		tfTuKhoa.setColumns(10);
+		
+		JButton btntimkiem = new JButton("T\u00ECm Ki\u1EBFm");
+		btntimkiem.setBounds(43, 58, 98, 23);
+		contentPane.add(btntimkiem);
+		
+		JButton btntaomoitk = new JButton("T\u1EA1o M\u1EDBi TK");
+		btntaomoitk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				TaoMoiTK obj = new TaoMoiTK();// hiện thị bảng cần hiện
+				obj.setVisible(true);		  // hiện thị bảng cần hiện
+			}
+		});
+		btntaomoitk.setBounds(147, 58, 89, 23);
+		contentPane.add(btntaomoitk);
+		
+		JButton btnchinhsuatk = new JButton("Ch\u1EC9nh S\u1EEDa TK");
+		btnchinhsuatk.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnchinhsuatk.setBounds(246, 58, 98, 23);
+		contentPane.add(btnchinhsuatk);
+		
+		JButton btnAll = new JButton("All");
+		btnAll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ConnectDB();
+					stmt = conn.createStatement();
+					rs = stmt.executeQuery("Select * From account");
+					rsm = rs.getMetaData();
+					
+					while(rs.next())
+					{
+						String id = rs.getString("Id");
+						String name = rs.getString("Name");
+						Double balance = rs.getDouble("Balance");
+						String address = rs.getString("Address");
+						Object[] row = new Object[] {id,name,balance,address};
+						model.addRow(row);
+					}
+					tbtk.setModel(model);
+					
+				} catch (Exception e3) {
+					// TODO: handle exception
+					e3.printStackTrace();
+				}
+			}
+		});
+		btnAll.setBounds(354, 58, 89, 23);
+		contentPane.add(btnAll);
+		
+		tbtk = new JTable();
+		tbtk.setBounds(10, 94, 481, 157);
+		contentPane.add(tbtk);
+	}
+}
