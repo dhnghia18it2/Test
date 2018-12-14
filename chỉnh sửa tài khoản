@@ -1,0 +1,131 @@
+package bankdb;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+import java.awt.Font;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class ChinhSuaTK extends JFrame {
+	Connection conn;
+	Statement stmt;
+	public void ConnectDB()
+	{
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost/bankdb","root", "");
+			System.out.println("Connect Success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			
+		}
+	}
+
+	private JPanel contentPane;
+	private JTextField tfId;
+	private JTextField tfName;
+	private JTextField tfBalance;
+	private JTextField tfAddress;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ChinhSuaTK frame = new ChinhSuaTK();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public ChinhSuaTK() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblChnhSaTi = new JLabel("Ch\u1EC9nh S\u1EEDa T\u00E0i Kho\u1EA3n");
+		lblChnhSaTi.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblChnhSaTi.setBounds(124, 11, 217, 35);
+		contentPane.add(lblChnhSaTi);
+		
+		JLabel lblId = new JLabel("Id");
+		lblId.setBounds(10, 47, 95, 27);
+		contentPane.add(lblId);
+		
+		JLabel lblName = new JLabel("Name");
+		lblName.setBounds(10, 85, 95, 27);
+		contentPane.add(lblName);
+		
+		JLabel lblBalance = new JLabel("Balance");
+		lblBalance.setBounds(10, 123, 95, 27);
+		contentPane.add(lblBalance);
+		
+		JLabel lblAddress = new JLabel("Address");
+		lblAddress.setBounds(10, 162, 95, 35);
+		contentPane.add(lblAddress);
+		
+		tfId = new JTextField();
+		tfId.setBounds(124, 50, 181, 24);
+		contentPane.add(tfId);
+		tfId.setColumns(10);
+		
+		tfName = new JTextField();
+		tfName.setBounds(124, 88, 181, 24);
+		contentPane.add(tfName);
+		tfName.setColumns(10);
+		
+		tfBalance = new JTextField();
+		tfBalance.setBounds(124, 126, 181, 24);
+		contentPane.add(tfBalance);
+		tfBalance.setColumns(10);
+		
+		tfAddress = new JTextField();
+		tfAddress.setBounds(124, 169, 181, 28);
+		contentPane.add(tfAddress);
+		tfAddress.setColumns(10);
+		
+		JButton btnChnhSa = new JButton("Ch\u1EC9nh S\u1EEDa");
+		btnChnhSa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					ConnectDB();
+					stmt = conn.createStatement();
+					int n = stmt.executeUpdate("Update account set Name='"+tfName.getText()+"',Balance='"+tfBalance.getText()+"',Address='"+tfAddress.getText()+"' Where Id='"+tfId.getText()+"'");
+					if(n>0) JOptionPane.showMessageDialog(null,"Success");
+					else JOptionPane.showMessageDialog(null, "Fail");
+					conn.close();
+					stmt.close();
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+			}
+		});
+		btnChnhSa.setBounds(162, 208, 104, 27);
+		contentPane.add(btnChnhSa);
+	}
+}
