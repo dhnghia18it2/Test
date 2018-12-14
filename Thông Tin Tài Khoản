@@ -39,7 +39,7 @@ public class Thongtintk extends JFrame {
 
 
 	private JPanel contentPane;
-	private JTextField tfTuKhoa;
+	private JTextField tfTukhoa;
 	// chuyển các thông tin vào table
 	Object[] colHeader = {"Id","Name","Balance","Address"};
 	DefaultTableModel model = new DefaultTableModel(colHeader, 0);
@@ -76,12 +76,35 @@ public class Thongtintk extends JFrame {
 		lblNhpTKha.setBounds(22, 11, 107, 36);
 		contentPane.add(lblNhpTKha);
 		
-		tfTuKhoa = new JTextField();
-		tfTuKhoa.setBounds(137, 11, 171, 36);
-		contentPane.add(tfTuKhoa);
-		tfTuKhoa.setColumns(10);
+		tfTukhoa = new JTextField();
+		tfTukhoa.setBounds(137, 11, 171, 36);
+		contentPane.add(tfTukhoa);
+		tfTukhoa.setColumns(10);
 		
 		JButton btntimkiem = new JButton("T\u00ECm Ki\u1EBFm");
+		btntimkiem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					ConnectDB();
+					stmt=conn.createStatement();
+					rs=stmt.executeQuery("Select * From account Where Id='"+tfTukhoa.getText()+"'");
+					rsm=rs.getMetaData();
+					while(rs.next())
+					{
+						String id = rs.getString("Id");
+						String name = rs.getString("Name");
+						Double balance = rs.getDouble("Balance");
+						String address = rs.getString("Address");
+						Object[] row = new Object[] {id,name,balance,address};
+						model.addRow(row);
+					}
+						tbtk.setModel(model);
+				} catch (Exception e4) {
+					// TODO: handle exception
+					e4.printStackTrace();
+				}
+			}
+		});
 		btntimkiem.setBounds(43, 58, 98, 23);
 		contentPane.add(btntimkiem);
 		
@@ -98,6 +121,8 @@ public class Thongtintk extends JFrame {
 		JButton btnchinhsuatk = new JButton("Ch\u1EC9nh S\u1EEDa TK");
 		btnchinhsuatk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ChinhSuaTK obj1 = new ChinhSuaTK();
+				obj1.setVisible(true);
 			}
 		});
 		btnchinhsuatk.setBounds(246, 58, 98, 23);
