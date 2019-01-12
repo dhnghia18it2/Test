@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -18,6 +19,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.JComboBox;
 
 public class Thongtintk extends JFrame {
 	Connection conn;
@@ -87,15 +89,15 @@ public class Thongtintk extends JFrame {
 				try {
 					ConnectDB();
 					stmt=conn.createStatement();
-					rs=stmt.executeQuery("Select * From account Where Id='"+tfTukhoa.getText()+"'");
+					rs=stmt.executeQuery("Select * From account Where Account='"+tfTukhoa.getText()+"'");
 					rsm=rs.getMetaData();
 					while(rs.next())
 					{
-						String id = rs.getString("Id");
+						String Account = rs.getString("Account");
 						String name = rs.getString("Name");
 						Double balance = rs.getDouble("Balance");
 						String address = rs.getString("Address");
-						Object[] row = new Object[] {id,name,balance,address};
+						Object[] row = new Object[] {Account,name,balance,address};
 						model.addRow(row);
 					}
 						tbtk.setModel(model);
@@ -139,11 +141,11 @@ public class Thongtintk extends JFrame {
 					
 					while(rs.next())
 					{
-						String id = rs.getString("Id");
+						String Account = rs.getString("Account");
 						String name = rs.getString("Name");
 						Double balance = rs.getDouble("Balance");
 						String address = rs.getString("Address");
-						Object[] row = new Object[] {id,name,balance,address};
+						Object[] row = new Object[] {Account,name,balance,address};
 						model.addRow(row);
 					}
 					tbtk.setModel(model);
@@ -160,5 +162,10 @@ public class Thongtintk extends JFrame {
 		tbtk = new JTable();
 		tbtk.setBounds(10, 94, 481, 157);
 		contentPane.add(tbtk);
+		
+		String[] items = {"Account","Name"};
+		JComboBox cbbTimKiem = new JComboBox(items);
+		cbbTimKiem.setBounds(329, 19, 114, 20);
+		contentPane.add(cbbTimKiem);
 	}
 }
